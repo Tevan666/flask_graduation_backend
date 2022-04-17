@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import json
+from lib2to3.pgen2 import token
 import numbers
 from flask import Flask, redirect, render_template, session, url_for, request, jsonify
 from sqlalchemy import create_engine
@@ -21,10 +22,9 @@ import rpa as r
 from exts import db
 # db绑定app
 # app.py
-
-
 from flask import Blueprint, make_response
 from utils.captcha import Captcha
+from utils.create_token.create_token import create_token, verify_token
 from io import BytesIO
 import json
 
@@ -108,7 +108,8 @@ def upload():
 @api_bp.route('/user_info', methods = ['GET', 'POST'])
 def user():
     if request.method == 'GET':
-        userId = request.values.get('userId')
+        token = request.headers["token"]
+        userId = verify_token(token)
         queryUser = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.userId == userId)).first()
         userInfo = class_to_dict(queryUser)
         return userInfo
@@ -147,8 +148,11 @@ def login():
         #print(type(q1))
         #print(q1 != None)
         account_info = class_to_dict(queryAccount)
+        
         if queryAccount != None and code.lower() == json.loads(temp):
-            return account_info
+            if account_info.get('userId'):
+              token = create_token(account_info['userId'])
+              return token
         else:
             return '登陆失败'
 
