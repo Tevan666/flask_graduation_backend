@@ -112,7 +112,7 @@ def user():
         userId = verify_token(token)
         queryUser = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.userId == userId)).first()
         userInfo = class_to_dict(queryUser)
-        return userInfo
+        return jsonify(status=200, data=userInfo)
     else: 
         audit_info = request.get_json()
         userId = audit_info['userId']
@@ -139,7 +139,7 @@ def login():
         return render_template('login.html')
     else:
         user = request.values.get('username')
-        passwd = request.values.get('passwd')
+        passwd = request.values.get('password')
         code = request.values.get('code')
         #try:
         queryAccount = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.name == user, Demo_Login_Users.password == passwd)).first()
@@ -152,7 +152,7 @@ def login():
         if queryAccount != None and code.lower() == json.loads(temp):
             if account_info.get('userId'):
               token = create_token(account_info['userId'])
-              return token
+              return jsonify(code=0,token=token)
         else:
             return '登陆失败'
 
