@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import imp
 import json
 import numbers
 from flask import Flask, redirect, render_template, session, url_for, request, jsonify
@@ -18,6 +19,8 @@ import rpa as r
 from restApp import api_bp
 # app.py 添加
 from exts import db
+
+from utils.object_tracking.track import track_bp
 # db绑定app
 # app.py
 
@@ -28,6 +31,7 @@ db.init_app(app)
 
 app.register_blueprint(bp)
 app.register_blueprint(api_bp)
+app.register_blueprint(track_bp)
 
 def class_to_dict(obj):
     

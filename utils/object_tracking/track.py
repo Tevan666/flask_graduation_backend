@@ -22,7 +22,8 @@ def object_tracking(filepath):
 
   while ret & frame.any()!= None:
       ret,frame=cap.read()
-      print(frame)
+      if(frame.any() == None or ret == False):
+        break
       hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
       mask=cv2.inRange(hsv,l_b,u_b)
       contours,_= cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
