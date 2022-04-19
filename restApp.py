@@ -77,7 +77,7 @@ def register():
         print(User)
         db.session.add(User)
         db.session.commit()
-        return 'success'
+        return jsonify(code=0, message="注册成功")
       
 @api_bp.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -87,15 +87,18 @@ def upload():
   page = int(request.values.get("page") or 1)
   userId = request.values.get('userId')
   if request.method == 'GET':
-       if(name == None): 
+       if(page == None): 
          animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).all()
+         count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).count()
+         print(count)
          animals_dict = class_to_dict(animals)
-         return jsonify(animals_dict)
+         return jsonify(status=200, data=animals_dict, total=count)
 
        animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).all()
+       count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).count()
+       
        animals_dict = class_to_dict(animals)
-       print(animals_dict)
-       return jsonify(animals_dict)
+       return jsonify(status=200, data=animals_dict, total=count)
   else:
        baike_url = request.values.get('baike_url')
        type = request.values.get('type')
@@ -147,9 +150,9 @@ def login():
             temp = f.read()
         #print(type(q1))
         #print(q1 != None)
-        account_info = class_to_dict(queryAccount)
         
         if queryAccount != None and code.lower() == json.loads(temp):
+            account_info = class_to_dict(queryAccount)
             if account_info.get('userId'):
               token = create_token(account_info['userId'])
               return jsonify(code=0,token=token)
