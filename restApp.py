@@ -85,7 +85,7 @@ def upload():
   status = request.values.get('status')
   per_page = int(request.values.get("per_page") or 10)
   page = int(request.values.get("page") or 1)
-  userId = request.values.get('userId')
+  userId = request.headers.get('userId')
   if request.method == 'GET':
        if(page == None): 
          animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).all()
