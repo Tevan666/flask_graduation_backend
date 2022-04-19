@@ -83,10 +83,17 @@ def register():
 def upload():
   name = request.values.get('name')
   status = request.values.get('status')
+  type = request.values.get('type')
   per_page = int(request.values.get("per_page") or 10)
   page = int(request.values.get("page") or 1)
   userId = request.headers.get('userId')
   if request.method == 'GET':
+       if(type):
+         animals = db.session.query(Animal).filter(db.and_(Animal.type == type)).all()
+         count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).count()
+         animals_dict = class_to_dict(animals)
+         return jsonify(status=200, data=animals_dict, total=count)
+
        if(page == None): 
          animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).all()
          count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).count()
