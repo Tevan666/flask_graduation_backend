@@ -33,5 +33,6 @@ class Animal(db.Model):
   img_url = db.Column(db.String(50))
   userId = db.Column(db.String(5))
   upload_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
+  description = db.Column(db.String(255), nullable=False)
   
   
