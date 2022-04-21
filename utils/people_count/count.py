@@ -27,9 +27,6 @@ for item in json_obj["features"]:
 def count():
   animals = db.session.query(Animal.square, func.count(Animal.square)).group_by(Animal.square).all()
   for row in animals:
-    data = {}
-    data['square'] = row[0]
-    data['count'] = row[1]
     for item in json_obj["features"]:
       if(item["properties"]["name"]!=''):
 
