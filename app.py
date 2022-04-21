@@ -21,6 +21,8 @@ from restApp import api_bp
 from exts import db
 
 from utils.object_tracking.track import track_bp
+
+from utils.people_count.count import count_bp
 # db绑定app
 # app.py
 
@@ -32,6 +34,7 @@ db.init_app(app)
 app.register_blueprint(bp)
 app.register_blueprint(api_bp)
 app.register_blueprint(track_bp)
+app.register_blueprint(count_bp)
 
 def class_to_dict(obj):
     

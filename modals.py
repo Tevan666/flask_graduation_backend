@@ -1,3 +1,4 @@
+from sqlalchemy import null
 from exts import db
 from datetime import datetime
 
@@ -34,5 +35,5 @@ class Animal(db.Model):
   userId = db.Column(db.String(5))
   upload_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
   description = db.Column(db.String(255), nullable=False)
-  
+  square = db.Column(db.String(15), nullable=True)
   

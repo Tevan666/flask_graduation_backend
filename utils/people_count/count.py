@@ -26,16 +26,15 @@ for item in json_obj["features"]:
 @count_bp.route('/count', methods = ['GET'])
 def count():
   animals = db.session.query(Animal.square, func.count(Animal.square)).group_by(Animal.square).all()
-  animals_list=[]
   for row in animals:
     data = {}
     data['square'] = row[0]
     data['count'] = row[1]
     for item in json_obj["features"]:
       if(item["properties"]["name"]!=''):
+
         if(re.findall(item["properties"]["name"], row[0])):
           item["properties"]["adcode"]=row[1]
-          print(item["properties"]["adcode"])
-    animals_list.append(data)
-  print(animals_list)
+        else:
+          item["properties"]["adcode"]=0
   return json_obj
