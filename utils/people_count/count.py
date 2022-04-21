@@ -9,6 +9,6 @@ with open(file_path, 'r', encoding="UTF-8") as load_file:
 count="6"
 square = "北京市"
 for item in json_obj["features"]:
-  if(re.findall(item["properties"]["name"], square)):
-    item["properties"]["adcode"]=count
-    print(item["properties"]["adcode"])
+  if(item["properties"]["name"]!=''):
+    if(re.findall(item["properties"]["name"], square)):
+      item["properties"]["adcode"]=count
