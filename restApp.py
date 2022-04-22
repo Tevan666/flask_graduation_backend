@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import json
 from lib2to3.pgen2 import token
+import re
 import numbers
 from flask import Flask, redirect, render_template, session, url_for, request, jsonify
 from sqlalchemy import create_engine
@@ -87,6 +88,13 @@ def upload():
   per_page = int(request.values.get("per_page") or 10)
   page = int(request.values.get("page") or 1)
   userId = request.headers.get('userId')
+  square = request.values.get('square')
+  access = request.values.get('access')
+  if(square!=None ):
+    if("省" in square):
+            province = square.split("省")[0] + '省'
+    else:
+            province = square
   if request.method == 'GET':
        if(type):
          animals = db.session.query(Animal).filter(db.and_(Animal.type == type,Animal.userId == userId)).all()
@@ -100,17 +108,28 @@ def upload():
          print(count)
          animals_dict = class_to_dict(animals)
          return jsonify(status=200, data=animals_dict, total=count)
+       if(access == 'true'):
+         animals = db.session.query(Animal).all()
+         count = db.session.query(Animal).count()
+         animals_dict = class_to_dict(animals)
+         return jsonify(status=200, data=animals_dict, total=count)
 
+
+        
        animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).all()
        count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).count()
        
        animals_dict = class_to_dict(animals)
        return jsonify(status=200, data=animals_dict, total=count)
   else:
+       if("省" in square):
+           province = square.split("省")[0] + '省'
+       else:
+           province = square
        baike_url = request.values.get('baike_url')
        type = request.values.get('type')
        img_url = request.values.get('img_url')
-       upload = Animal(userId=userId, name=name, baike_url=baike_url, status = status, img_url=img_url, type=type)
+       upload = Animal(userId=userId, name=name, baike_url=baike_url, status = status, img_url=img_url, type=type, square=square, province=province)
        db.session.add(upload)
        db.session.commit()
        return img_url
