@@ -36,4 +36,4 @@ class Animal(db.Model):
   upload_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
   description = db.Column(db.String(255), nullable=False)
   square = db.Column(db.String(15), nullable=True)
-  
+  province = db.Column(db.String(15), nullable = True)

@@ -15,17 +15,11 @@ current_dir = dirname(__file__)
 file_path = join(current_dir, "province.json")
 with open(file_path, 'r', encoding="UTF-8") as load_file:
   json_obj = json.load(load_file)
-# print(json_obj)
-count="6"
-square = "北京市"
-for item in json_obj["features"]:
-  if(item["properties"]["name"]!=''):
-    if(re.findall(item["properties"]["name"], square)):
-      item["properties"]["adcode"]=count
 
 @count_bp.route('/count', methods = ['GET'])
 def count():
-  animals = db.session.query(Animal.square, func.count(Animal.square)).group_by(Animal.square).all()
+  animals = db.session.query(Animal.province, func.count(Animal.province)).group_by(Animal.province).all()
+  print(animals)
   for row in animals:
     for item in json_obj["features"]:
       if(item["properties"]["name"]!=''):
