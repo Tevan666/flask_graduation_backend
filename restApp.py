@@ -113,8 +113,6 @@ def upload():
          count = db.session.query(Animal).count()
          animals_dict = class_to_dict(animals)
          return jsonify(status=200, data=animals_dict, total=count)
-
-
         
        animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).all()
        count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).count()

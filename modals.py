@@ -4,6 +4,23 @@ from datetime import datetime
 
 # 创建Model
 
+#购买历史记录表  
+class Purchase_history(db.Model):
+  __tablename__ = 'purchase_history'
+  id = db.Column('id',db.Integer, primary_key=True, autoincrement=True, nullable=False)
+  user_id = db.Column('user_id',db.String(5))
+  purchase_time = db.Column('purchase_time',db.DateTime, nullable=False, default=datetime.now)
+  available_time = db.Column('available_time',db.DateTime, nullable=False)
+  goods_id = db.Column('goods_id',db.String(50))
+
+#商品表
+class Goods(db.Model):
+  __tablename__ = 'goods'
+
+  id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+  type = db.Column(db.String(10), nullable=False)
+  goods_id = db.Column(db.String(5))
+  
 #用户表
 class Demo_Login_Users(db.Model):
   __tablename__ = 'demo_login_users'
@@ -26,7 +43,7 @@ class Animal(db.Model):
   __tablename__ = 'animal'
 
   id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-  type = db.Column(db.String(50), nullable=False)
+  type = db.Column(db.String(50), nullable=False) 
   name = db.Column(db.String(50), nullable=False)
   status = db.Column(db.String(50), nullable=False)
   baike_url = db.Column(db.String(50))
@@ -37,20 +54,3 @@ class Animal(db.Model):
   square = db.Column(db.String(15), nullable=True)
   province = db.Column(db.String(15), nullable = True)
 
-#商品表
-class goods(db.Model):
-  __tablename__ = 'goods'
-
-  id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-  type = db.Column(db.String(10), nullable=False)
-  goods_id = db.Column(db.String(5))
-
-#购买历史记录表  
-class purchase_time(db.Model):
-  __tablename__ = 'purchase_time'
-
-  id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-  user_id = db.Column(db.String(5), db.ForeignKey('Demo_Login_Users.userId'), primary_key=True) #外键，用户表userid
-  purchase_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-  available_time = db.Column(db.DateTime, nullable=False)
-  goods_id = db.Column(db.String(50), db.ForeignKey('goods.goods_id'), primary_key=True ) #外键，商品表goods_id
