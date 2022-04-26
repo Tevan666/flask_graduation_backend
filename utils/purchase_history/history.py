@@ -35,7 +35,7 @@ def history():
       if(exist_user):
         if(exist_goods == []):
           return jsonify(code=1,message='不存在当前商品')
-        exist_history = db.session.query(Purchase_history).filter(Purchase_history.goods_id==goods_id).filter(Purchase_history.user_id==user_id)
+        exist_history = db.session.query(Purchase_history).filter(Purchase_history.user_id==user_id).filter(Purchase_history.goods_id==goods_id).all()
         if(exist_history):
           return jsonify(code=1,message='已拥有该功能')
         db.session.add(purchase)
