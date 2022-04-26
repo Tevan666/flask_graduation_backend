@@ -1,3 +1,4 @@
+from email.policy import default
 from sqlalchemy import null
 from exts import db
 from datetime import datetime
@@ -10,7 +11,7 @@ class Purchase_history(db.Model):
   id = db.Column('id',db.Integer, primary_key=True, autoincrement=True, nullable=False)
   user_id = db.Column('user_id',db.String(5))
   purchase_time = db.Column('purchase_time',db.DateTime, nullable=False, default=datetime.now)
-  available_time = db.Column('available_time',db.DateTime, nullable=False)
+  available_time = db.Column('available_time',db.DateTime, nullable=False, default="9999-12-31 12:00:00")
   goods_id = db.Column('goods_id',db.String(50))
 
 #商品表
