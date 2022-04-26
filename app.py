@@ -25,6 +25,8 @@ from utils.object_tracking.track import track_bp
 from utils.people_count.count import count_bp
 
 from utils.purchase_history.history import history_bp
+
+from utils.upload_history.upload import upload_bp
 # from utils.items_detect.detect import detect_bp #mac不跑TensorFlow
 # db绑定app
 # app.py
@@ -39,6 +41,7 @@ app.register_blueprint(api_bp)
 app.register_blueprint(track_bp)
 app.register_blueprint(count_bp)
 app.register_blueprint(history_bp)
+app.register_blueprint(upload_bp)
 
 # app.register_blueprint(detect_bp)
 
