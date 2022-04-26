@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from email import message
 import json
 from lib2to3.pgen2 import token
 import re
@@ -156,7 +157,7 @@ def user():
             if(description):
                 queryUser.description = description
             db.session.commit()
-            return '0'
+            return jsonify(code=0,message='修改成功')
         else:
             return False
 
