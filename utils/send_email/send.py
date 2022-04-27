@@ -34,6 +34,19 @@ def send_email(title,code,email):
   smtpObj.sendmail(sender, receivers, message.as_string()) # 发送邮件
 
 code= ''
+@send_bp.route('/bind', methods = ['PUT'])
+def bind_email():
+  email = request.values.get('email')
+  userId = request.headers.get('userId')
+
+  exist_account = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).first()
+  if(exist_account):
+    update_email = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).update({'email': email})
+    db.session.commit()
+    return jsonify(code=0,message='绑定成功')
+  else:
+    return jsonify(code=1,message='不存在此账号!')
+
 @send_bp.route('/send', methods = ['GET'])
 def send(): 
   type = request.values.get('type')
@@ -62,7 +75,7 @@ def register():
     db.session.commit()
     return jsonify(code=0,message='注册成功')
   else:
-    return jsonify(code=1,message='验证码不正确')
+    return jsonify(code=1,message='验证码不正确!')
 
 
 @send_bp.route('/update_password', methods = ['PUT'])
@@ -76,6 +89,6 @@ def update():
       db.session.commit()
       return jsonify(code=0,message='修改成功')
     else: 
-      return jsonify(code=1,message='不存在此账号')
+      return jsonify(code=1,message='不存在此账号!')
   else:
-    return jsonify(code=1,message='验证码不正确')
+    return jsonify(code=1,message='验证码不正确!')
