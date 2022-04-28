@@ -41,8 +41,12 @@ code= ''
 def bind_email():
   email = request.values.get('email')
   userId = request.headers.get('userId')
-
+  phone = request.values.get('phone')
   exist_account = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).first()
+  if(phone and exist_account):
+    update_phone = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).update({'phone': phone})
+    db.session.commit()
+    return jsonify(code=0,message='绑定成功')
   if(exist_account):
     update_email = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).update({'email': email})
     db.session.commit()
