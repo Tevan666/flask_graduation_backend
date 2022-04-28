@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from crypt import methods
 from email import message
 import json
 from lib2to3.pgen2 import token
@@ -81,20 +82,19 @@ def register():
         db.session.commit()
         return jsonify(code=0, message="注册成功")
       
-@api_bp.route('/user_info', methods = ['GET', 'POST'])
+@api_bp.route('/user_info', methods = ['GET', 'POST', 'DELETE'])
 def user():
+    token = request.headers["token"]
+    userId = verify_token(token)
+    queryUser = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.userId == userId)).first()
+
     if request.method == 'GET':
-        token = request.headers["token"]
-        userId = verify_token(token)
-        queryUser = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.userId == userId)).first()
         userInfo = class_to_dict(queryUser)
         return jsonify(status=200, data=userInfo)
-    else: 
+    elif request.method == 'POST': 
         audit_info = request.get_json()
-        userId = audit_info['userId']
         if(userId):
             queryUser = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.userId == userId)).first()
-            print(audit_info)
             username = audit_info['username']
             square = audit_info['square']
             description = audit_info['description']
@@ -107,7 +107,11 @@ def user():
             db.session.commit()
             return jsonify(code=0,message='修改成功')
         else:
-            return False
+            return jsonify(code=1,message='不存在此用户!')
+    elif request.method == 'DELETE':
+        db.session.delete(queryUser)
+        db.session.commit()
+
 
 @api_bp.route('/login', methods = ['GET', 'POST'])
 def login():
