@@ -126,13 +126,17 @@ def login():
         #print(type(q1))
         #print(q1 != None)
         
-        if queryAccount != None and code.lower() == json.loads(temp):
+        if queryAccount != None:
+          if code.lower() == json.loads(temp):
             account_info = class_to_dict(queryAccount)
             if account_info.get('userId'):
               token = create_token(account_info['userId'])
               return jsonify(code=0,token=token)
+          else:
+            return jsonify(code=1,message="验证码错误")
+
         else:
-            return '登陆失败'
+            return jsonify(code=1,message="账号或密码错误")
 
 # 两把钥匙
 client_id = 'b4a6925a59570ab8a4ca'

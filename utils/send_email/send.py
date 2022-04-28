@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from cmath import log
 import smtplib
 from email.mime.text import MIMEText # 构建邮件文本
 from email.header import Header # 发送内容
@@ -9,6 +10,8 @@ from modals import Demo_Login_Users, Animal, Purchase_history, Goods
 from exts import db
 from flask import Blueprint, jsonify, request
 from utils.generate_userId.generate import general
+from urllib.parse import unquote
+from utils.create_token.create_token import create_token
 
 send_bp = Blueprint('send_bp', __name__, url_prefix='/api/')
 
@@ -52,10 +55,12 @@ def send():
   type = request.values.get('type')
   global email
   email = request.values.get('email')
-  if type == 'update':
+  if type == 'register':
     title = '邮箱注册'
-  else:
+  elif type == 'update':
     title = '修改密码'
+  else:
+    title = '登录'
   global code 
   code = general_code()
   send_email(title,code,email)
@@ -88,6 +93,21 @@ def update():
       update_password = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.email == email).update({'password': new_password})
       db.session.commit()
       return jsonify(code=0,message='修改成功')
+    else: 
+      return jsonify(code=1,message='不存在此账号!')
+  else:
+    return jsonify(code=1,message='验证码不正确!')
+
+@send_bp.route('/email_login', methods = ['POST'])
+def login():
+  access_code = request.values.get('code')
+  login_email = request.values.get('login_email')
+  if(access_code == code.lower()):
+    exist_account = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.email == login_email).first()
+    if(exist_account):
+      account_info = class_to_dict(exist_account)
+      token = create_token(account_info['userId'])
+      return jsonify(code=0,token=token)
     else: 
       return jsonify(code=1,message='不存在此账号!')
   else:
