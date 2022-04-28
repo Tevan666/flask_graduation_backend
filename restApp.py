@@ -115,10 +115,12 @@ def login():
         return render_template('login.html')
     else:
         user = request.values.get('username')
+        email = request.values.get('email')
+        phone = request.values.get('phone')
         passwd = request.values.get('password')
         code = request.values.get('code')
         #try:
-        queryAccount = db.session.query(Demo_Login_Users).filter(db.and_(Demo_Login_Users.name == user, Demo_Login_Users.password == passwd)).first()
+        queryAccount = db.session.query(Demo_Login_Users).filter(db.or_(Demo_Login_Users.name == user,Demo_Login_Users.email == email, Demo_Login_Users.phone == phone )).filter(Demo_Login_Users.password == passwd).first()
         with open('temp.json', 'r') as f:
             temp = f.read()
         #print(type(q1))
