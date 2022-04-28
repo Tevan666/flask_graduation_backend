@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-from crypt import methods
 from email import message
 import json
 from lib2to3.pgen2 import token
