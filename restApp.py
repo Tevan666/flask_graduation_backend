@@ -71,12 +71,10 @@ def register():
         return render_template('register.html')
     else:
         userId = general()
-        id = request.values.get('id')
         user = request.values.get('username')
         passwd = request.values.get('passwd')
         phone = request.values.get('phone')
-        User = Demo_Login_Users(id=id,userId=userId,name=user, phone=phone, password= passwd, status=0, balances=0)
-        print(User)
+        User = Demo_Login_Users(userId=userId,name=user, phone=phone, password= passwd)
         db.session.add(User)
         db.session.commit()
         return jsonify(code=0, message="注册成功")

@@ -64,7 +64,8 @@ def upload():
        upload = Animal(userId=userId, name=name, baike_url=baike_url, status = status, img_url=img_url, type=type, square=square, province=province)
        db.session.add(upload)
        db.session.commit()
-       return img_url
+       return jsonify(code=0, message='上传成功')
+
   elif(request.method == 'DELETE'):
        id = request.values.get('id')
        delete_history = Animal.query.get(id)

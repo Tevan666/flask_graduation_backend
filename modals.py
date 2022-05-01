@@ -33,10 +33,10 @@ class Demo_Login_Users(db.Model):
   password = db.Column(db.String(50))
   create_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
   update_time = db.Column(db.DateTime)
-  status = db.Column(db.Integer, nullable=False)
+  status = db.Column(db.Integer, nullable=False, default='valid')
   square = db.Column(db.String(10))
   description = db.Column(db.String(255))
-  balances = db.Column(db.Integer, nullable=False)
+  balances = db.Column(db.Integer, nullable=False, default=0)
   email = db.Column(db.String(20))
 
 #上传历史记录表
