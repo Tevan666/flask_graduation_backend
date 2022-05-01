@@ -22,7 +22,9 @@ def history():
   if(request.method == 'GET'):
     #查询所有用户的购买历史
     history = db.session.query(Purchase_history).all()
-    return jsonify(status=200,data=class_to_dict(history))
+    count = db.session.query(Purchase_history).count()
+
+    return jsonify(status=200,data=class_to_dict(history), total=count)
   else:
     #购买商品
     goods = request.get_json()
