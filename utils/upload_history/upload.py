@@ -2,6 +2,8 @@ from modals import Demo_Login_Users, Animal, Purchase_history, Goods
 from exts import db
 from flask import Blueprint, jsonify, request
 from restApp import class_to_dict
+from sqlalchemy import func
+
 upload_bp = Blueprint('upload_bp', __name__, url_prefix='/api/')
 
 
@@ -34,10 +36,17 @@ def upload():
          animals_dict = class_to_dict(animals)
          return jsonify(status=200, data=animals_dict, total=count)
        if(access == 'true'):
+         group = db.session.query(Animal.userId,func.count(Animal.userId)).group_by(Animal.userId).all()
+         user_group = []
+         for row in group:
+           queryname = db.session.query(Demo_Login_Users.name).filter(Demo_Login_Users.userId == row[0]).all()
+           for item in queryname:
+             data = {'username': item[0], 'value': row[1]}
+             user_group.append(data)
          animals = db.session.query(Animal).all()
          count = db.session.query(Animal).count()
          animals_dict = class_to_dict(animals)
-         return jsonify(status=200, data=animals_dict, total=count)
+         return jsonify(status=200, data=animals_dict, total=count,group=user_group)
         
        animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).all()
        count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).count()
