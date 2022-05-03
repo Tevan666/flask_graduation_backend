@@ -80,7 +80,7 @@ def wrong_request(code):
 
 
 def base64_2_array(base64_data):
-    im_data = base64.b64decode(base64_data)
-    im_array = np.frombuffer(im_data, np.uint8)
-    im_array = cv2.imdecode(im_array, cv2.COLOR_RGB2BGR)
+    im_data = base64.b64decode(base64_data) #经过base64编码的bytes-like对象或者ASCII字符串进行解码
+    im_array = np.frombuffer(im_data, np.uint8) # 将缓冲区解释为一维数组
+    im_array = cv2.imdecode(im_array, cv2.COLOR_RGB2BGR) #从指定的内存缓存中读取数据，并把数据转换 (解码)成图像格式;主要用于从网络传输数据中恢复出图像。 
     return im_array

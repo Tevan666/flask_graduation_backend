@@ -75,3 +75,16 @@ def upload():
          return jsonify(code=0, message='删除成功')
        else:
           return jsonify(code=1, message='不存在此条记录')
+
+
+@upload_bp.route('/recharge', methods = ['PUT'])
+def recharge():
+  userId = request.headers["userId"]
+  amount = request.values.get('amount')
+  current_user = class_to_dict(db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).first())
+  new_balances = int(float(amount))  + current_user['balances']
+  print(new_balances)
+
+  update_balances = db.session.query(Demo_Login_Users).filter(Demo_Login_Users.userId == userId).update({'balances': new_balances})
+  db.session.commit()
+  return jsonify(code=0,message='修改成功')

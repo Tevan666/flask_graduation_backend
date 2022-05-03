@@ -4,7 +4,8 @@ import json
 from lib2to3.pgen2 import token
 import re
 import numbers
-from flask import Flask, redirect, render_template, session, url_for, request, jsonify
+import os
+from flask import Flask, redirect, render_template, send_file, url_for, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -63,7 +64,11 @@ def welcome():
     r.type('//*[@id="kw"]','[enter]')
     r.wait(2)
     r.snap('page', 'results.png')
-    return 'hello'
+    r.close()
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    # basedir一般是在配置文件中
+    file_path = os.path.join(basedir, 'results.png')
+    return send_file(file_path)
 
 @api_bp.route('/register', methods = ['GET', 'POST'])
 def register():

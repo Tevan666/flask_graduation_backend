@@ -5,6 +5,7 @@ import numpy as np
 import re
 
 import cv2
+from sqlalchemy import false
 
 track_bp = Blueprint('track', __name__, url_prefix='/api/')
 
@@ -14,7 +15,7 @@ def resize(img):
 def object_tracking(filepath):
   cap=cv2.VideoCapture(filepath)
   fourcc = cv2.VideoWriter_fourcc(*'MPEG')
-  out = cv2.VideoWriter('output.avi',fourcc, 20.0, (1920,1080))
+  out = cv2.VideoWriter('output.mp4',fourcc, 20.0, (1920,1080))
 
   ret,frame=cap.read()
   l_b=np.array([0,230,170])# lower hsv bound for red
@@ -22,7 +23,7 @@ def object_tracking(filepath):
 
   while ret & frame.any()!= None:
       ret,frame=cap.read()
-      if(frame.any() == None or ret == False):
+      if(ret == False):
         break
       hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
       mask=cv2.inRange(hsv,l_b,u_b)
@@ -45,8 +46,13 @@ def object_tracking(filepath):
       cv2.imshow("frame",resize(frame))
 
       key=cv2.waitKey(1)
-      if key==ord('q') | frame.all() is None:
+      # print(frame)
+      if key==ord('q') | ret == False:
           break
+  if(ret == False):
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
   cv2.waitKey(0)
   cap.release()
   out.release()
@@ -91,15 +97,15 @@ def gen_frames(filepath):
 @track_bp.route('/get_video', methods = ['GET'])
 def get_video():
   test_dir = os.path.abspath(os.path.join(os.getcwd()))
-  print(test_dir)
-  files = glob.glob(test_dir + '/' + "*.avi")
+  files = glob.glob(test_dir + '/' + "output.mp4")
   filename = re.sub(r'.+\/', '', files[0])
-  print(filename)
   try:
       response = make_response(
           send_from_directory(test_dir, filename, as_attachment=True))
+      print(response)
+      
       return response
   except Exception as e:
-        return jsonify({"code": "异常", "message": "{}".format(e)})
+        return jsonify({"code": "1", "message": "{}".format(e)})
 
 
