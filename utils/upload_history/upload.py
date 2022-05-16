@@ -3,7 +3,6 @@ from exts import db
 from flask import Blueprint, jsonify, request
 from restApp import class_to_dict
 from sqlalchemy import func
-from flask_paginate import Pagination, get_page_parameter
 
 upload_bp = Blueprint('upload_bp', __name__, url_prefix='/api/')
 

@@ -10,7 +10,6 @@ from modals import Demo_Login_Users, Animal, Purchase_history, Goods
 from exts import db
 from flask import Blueprint, jsonify, request
 from utils.generate_userId.generate import general
-from urllib.parse import unquote
 from utils.create_token.create_token import create_token
 
 send_bp = Blueprint('send_bp', __name__, url_prefix='/api/')

@@ -1,24 +1,15 @@
 # -*- coding: UTF-8 -*-
 from email import message
 import json
-from lib2to3.pgen2 import token
-import re
-import numbers
 import os
 from flask import Flask, redirect, render_template, send_file, url_for, request, jsonify
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column,Integer, String
-from collections import Iterable
 from modals import Demo_Login_Users, Animal
 #restful
-from flask_restful import Resource, Api
 #导入配置
 from utils.generate_userId.generate import general
-import config
 #导入蓝图
-from common.bp_captcha import bp
 from furl import furl
 import rpa as r
 # app.py 添加
@@ -26,9 +17,7 @@ from exts import db
 # db绑定app
 # app.py
 from flask import Blueprint, make_response
-from utils.captcha import Captcha
 from utils.create_token.create_token import create_token, verify_token
-from io import BytesIO
 import json
 
 api_bp = Blueprint('api', __name__, url_prefix='/api/')
