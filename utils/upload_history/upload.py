@@ -3,6 +3,7 @@ from exts import db
 from flask import Blueprint, jsonify, request
 from restApp import class_to_dict
 from sqlalchemy import func
+from flask_paginate import Pagination, get_page_parameter
 
 upload_bp = Blueprint('upload_bp', __name__, url_prefix='/api/')
 
@@ -12,8 +13,8 @@ def upload():
   name = request.values.get('name')
   status = request.values.get('status')
   type = request.values.get('type')
-  per_page = int(request.values.get("per_page") or 10)
-  page = int(request.values.get("page") or 1)
+  per_page = int(request.values.get("pageSize") or 10)
+  page = int(request.values.get("current") or 1)
   userId = request.headers.get('userId')
   square = request.values.get('square')
   access = request.values.get('access')
@@ -35,6 +36,12 @@ def upload():
          print(count)
          animals_dict = class_to_dict(animals)
          return jsonify(status=200, data=animals_dict, total=count)
+       if(per_page):
+         count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).count()
+         total = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).paginate(page=page,per_page=per_page)
+         obj_res = class_to_dict(total.items)
+         return jsonify(status=200, data=obj_res,total=count)
+
        if(access == 'true'):
          group = db.session.query(Animal.userId,func.count(Animal.userId)).group_by(Animal.userId).all()
          user_group = []
@@ -54,6 +61,7 @@ def upload():
        animals_dict = class_to_dict(animals)
        return jsonify(status=200, data=animals_dict, total=count)
   elif(request.method == 'POST'):
+       description = request.values.get('description')
        if("省" in square):
            province = square.split("省")[0] + '省'
        else:
@@ -61,7 +69,7 @@ def upload():
        baike_url = request.values.get('baike_url')
        type = request.values.get('type')
        img_url = request.values.get('img_url')
-       upload = Animal(userId=userId, name=name, baike_url=baike_url, status = status, img_url=img_url, type=type, square=square, province=province)
+       upload = Animal(userId=userId, name=name, baike_url=baike_url, status = status, img_url=img_url, type=type, square=square, province=province, description=description)
        db.session.add(upload)
        db.session.commit()
        return jsonify(code=0, message='上传成功')
