@@ -23,12 +23,16 @@ def upload():
     else:
             province = square
   if request.method == 'GET':
+       if(name):
+         animals = db.session.query(Animal).filter(db.and_(Animal.name == name,Animal.userId == userId)).all()
+         count = db.session.query(Animal).filter(db.and_(Animal.type == type,Animal.userId == userId)).count()
+         animals_dict = class_to_dict(animals)
+         return jsonify(status=200, data=animals_dict, total=count)
        if(type):
          animals = db.session.query(Animal).filter(db.and_(Animal.type == type,Animal.userId == userId)).all()
          count = db.session.query(Animal).filter(db.and_(Animal.type == type,Animal.userId == userId)).count()
          animals_dict = class_to_dict(animals)
          return jsonify(status=200, data=animals_dict, total=count)
-
        if(page == None): 
          animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).all()
          count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).count()

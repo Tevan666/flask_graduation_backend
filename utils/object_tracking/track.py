@@ -72,12 +72,14 @@ def trackfile():
       filename=video_file.filename
   return jsonify({
         "code": 0,
-        "message": "上传成功"
+        "message": "上传成功",
+        "status": 'done'
     })
 
 @track_bp.route('/object_track', methods = ['POST'])
 def object_track():
   test_dir = os.path.abspath(os.path.join(os.getcwd()))
+  print(test_dir)
   files = glob.glob(test_dir + '/' + "*.mp4")
   object_tracking(files[0])
   return jsonify(code=0, msg='成功生成检测视频')
