@@ -14,6 +14,7 @@ class_names = ['bird', 'book', 'butterfly', 'cattle',
 def pred(img):
     current_dir = dirname(__file__)
     file_path = join(current_dir, "Classify_model.h5")
+    print(file_path)
     if os.path.exists(file_path):
         model = models.load_model(file_path)
         # json_string = model.to_json()
@@ -21,11 +22,8 @@ def pred(img):
     else:
         print("trained weight file isn't exist.")
     data=cv2.resize(img,dsize=(32,32))
-    #cv2.imwrite("%s.jpg"%(str(time.localtime( time.time() ))),img)
     data=data/255.0
     data=np.reshape(data,(1,32,32,3))
     pred_arr = model.predict(data)
     prediction = np.argmax(pred_arr[0])
-    class_name = class_names[np.argmax(pred_arr[0])]
-    #print(prediction,class_name)
     return  prediction

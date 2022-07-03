@@ -23,6 +23,18 @@ def upload():
     else:
             province = square
   if request.method == 'GET':
+       if(access == 'true'):
+         group = db.session.query(Animal.userId,func.count(Animal.userId)).group_by(Animal.userId).all()
+         user_group = []
+         for row in group:
+           queryname = db.session.query(Demo_Login_Users.name).filter(Demo_Login_Users.userId == row[0]).all()
+           for item in queryname:
+             data = {'username': item[0], 'value': row[1]}
+             user_group.append(data)
+         animals = db.session.query(Animal).all()
+         count = db.session.query(Animal).count()
+         animals_dict = class_to_dict(animals)
+         return jsonify(status=200, data=animals_dict, total=count,group=user_group)
        if(name):
          animals = db.session.query(Animal).filter(db.and_(Animal.name == name,Animal.userId == userId)).all()
          count = db.session.query(Animal).filter(db.and_(Animal.type == type,Animal.userId == userId)).count()
@@ -45,19 +57,6 @@ def upload():
          obj_res = class_to_dict(total.items)
          return jsonify(status=200, data=obj_res,total=count)
 
-       if(access == 'true'):
-         group = db.session.query(Animal.userId,func.count(Animal.userId)).group_by(Animal.userId).all()
-         user_group = []
-         for row in group:
-           queryname = db.session.query(Demo_Login_Users.name).filter(Demo_Login_Users.userId == row[0]).all()
-           for item in queryname:
-             data = {'username': item[0], 'value': row[1]}
-             user_group.append(data)
-         animals = db.session.query(Animal).all()
-         count = db.session.query(Animal).count()
-         animals_dict = class_to_dict(animals)
-         return jsonify(status=200, data=animals_dict, total=count,group=user_group)
-        
        animals = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).all()
        count = db.session.query(Animal).filter(db.and_(Animal.userId == userId)).limit(per_page).offset((page-1) * per_page).count()
        

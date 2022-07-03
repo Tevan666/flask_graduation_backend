@@ -29,7 +29,7 @@ from utils.purchase_history.history import history_bp
 from utils.upload_history.upload import upload_bp
 
 from utils.send_email.send import send_bp
-# from utils.items_detect.detect import detect_bp #mac不跑TensorFlow
+from utils.items_detect.detect import detect_bp #mac不跑TensorFlow
 # db绑定app
 # app.py
 
@@ -46,7 +46,7 @@ app.register_blueprint(history_bp)
 app.register_blueprint(upload_bp)
 app.register_blueprint(send_bp)
 
-# app.register_blueprint(detect_bp)
+app.register_blueprint(detect_bp)
 
 def class_to_dict(obj):
     
